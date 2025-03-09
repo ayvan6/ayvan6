@@ -1,0 +1,38 @@
+import torch
+from transformers import pipeline
+from flask import Flask, request, jsonify
+
+# Load a pre-trained NLP model for symptom analysis
+nlp_model = pipeline("zero-shot-classification", model="facebook/bart-large-mnli")
+
+# Define possible health conditions
+health_conditions = [
+    "Common Cold", "Flu", "COVID-19", "Migraine", "Food Poisoning",
+    "Diabetes", "Hypertension", "Allergy", "Pneumonia", "Asthma"
+]
+
+app = Flask(__name__)
+
+@app.route('/predict', methods=['POST'])
+def predict():
+    data = request.json
+    symptoms = data.get("symptoms", "")
+
+    if not symptoms:
+        return jsonify({"error": "Please provide symptoms."}), 400
+
+    # Use NLP model for classification
+    result = nlp_model(symptoms, health_conditions)
+
+    # Get the most likely condition
+    diagnosis = result["labels"][0]
+    confidence = result["scores"][0]
+
+    return jsonify({
+        "symptoms": symptoms,
+        "predicted_condition": diagnosis,
+        "confidence": confidence
+    })
+
+if __name__ == '__main__':
+    app.run(debug=True)
