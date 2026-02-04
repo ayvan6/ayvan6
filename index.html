@@ -40,12 +40,17 @@ h1 {
 
 /* WARNING TEXT */
 .warning {
-  display: none;
+  opacity: 0;
   margin: 12px 0 22px;
   font-size: 1.2rem;
   font-weight: 700;
   color: #fff;
   text-shadow: 0 4px 14px rgba(0,0,0,0.35);
+  transition: opacity 0.4s ease;
+}
+
+.warning.show {
+  opacity: 1;
   animation: shake 0.4s ease;
 }
 
@@ -69,7 +74,7 @@ button {
   border-radius: 18px;
   border: none;
   cursor: pointer;
-  transition: transform 0.15s ease;
+  user-select: none;
 }
 
 /* YES */
@@ -88,13 +93,12 @@ button {
   100% { transform: translateX(-50%) scale(1); }
 }
 
-/* NO – UNTOUCHABLE */
+/* NO */
 #no {
   background: #e74c3c;
   color: white;
   top: 20px;
   left: 20px;
-  pointer-events: none;
 }
 
 /* Floating hearts */
@@ -102,18 +106,13 @@ button {
   position: absolute;
   color: rgba(255,255,255,0.7);
   animation: floatUp 6s linear forwards;
+  pointer-events: none;
 }
 
 @keyframes floatUp {
-  from {
-    transform: translateY(100vh) scale(0.6);
-    opacity: 0;
-  }
+  from { transform: translateY(100vh) scale(0.6); opacity: 0; }
   30% { opacity: 1; }
-  to {
-    transform: translateY(-10vh) scale(1.2);
-    opacity: 0;
-  }
+  to { transform: translateY(-10vh) scale(1.2); opacity: 0; }
 }
 </style>
 </head>
@@ -126,63 +125,72 @@ button {
 
   <div class="buttons" id="arena">
     <button id="yes">Yes 😍</button>
-    <button id="no">No 🙃</button>
+    <button id="no" tabindex="-1">No 🙃</button>
   </div>
 </div>
 
 <script>
 const noBtn = document.getElementById("no");
-const arena = document.getElementById("arena");
 const yesBtn = document.getElementById("yes");
+const arena = document.getElementById("arena");
 const warning = document.getElementById("warning");
 
 let attempts = 0;
-const showWarningAfter = 3;
 
 const warnings = [
   "Hey 😅 stop trying",
   "You’re testing destiny 👀",
-  "This is not possible🤨",
+  "This is not possible 🤨",
   "No is not an option 💀",
   "Just say YES madamji 💖"
 ];
 
 function moveNo() {
-  const a = arena.getBoundingClientRect();
-  const b = noBtn.getBoundingClientRect();
+  const arenaRect = arena.getBoundingClientRect();
+  const noRect = noBtn.getBoundingClientRect();
+  const yesRect = yesBtn.getBoundingClientRect();
 
-  const x = Math.random() * (a.width - b.width);
-  const y = Math.random() * (a.height - b.height);
+  const safeDistance = 140;
+  let x, y, distance;
+  let tries = 0;
+
+  do {
+    x = Math.random() * (arenaRect.width - noRect.width);
+    y = Math.random() * (arenaRect.height - noRect.height);
+
+    const noCX = arenaRect.left + x + noRect.width / 2;
+    const noCY = arenaRect.top + y + noRect.height / 2;
+    const yesCX = yesRect.left + yesRect.width / 2;
+    const yesCY = yesRect.top + yesRect.height / 2;
+
+    distance = Math.hypot(noCX - yesCX, noCY - yesCY);
+    tries++;
+  } while (distance < safeDistance && tries < 50);
 
   noBtn.style.left = x + "px";
   noBtn.style.top = y + "px";
 
   attempts++;
 
-  if (attempts >= showWarningAfter) {
-    warning.style.display = "block";
+  if (attempts >= 3) {
+    warning.classList.add("show");
     warning.textContent =
-      warnings[Math.min(attempts - showWarningAfter, warnings.length - 1)];
-    warning.style.animation = "none";
-    warning.offsetHeight; // reset animation
-    warning.style.animation = "shake 0.4s ease";
+      warnings[Math.min(attempts - 3, warnings.length - 1)];
   }
 
   if (navigator.vibrate) navigator.vibrate(40);
 }
 
-/* PROXIMITY DETECTION */
-document.addEventListener("mousemove", e => {
-  const rect = noBtn.getBoundingClientRect();
-  const dx = e.clientX - (rect.left + rect.width / 2);
-  const dy = e.clientY - (rect.top + rect.height / 2);
-  const distance = Math.sqrt(dx * dx + dy * dy);
-
-  if (distance < 110) moveNo();
+/* HARD BLOCK NO — ALL EVENTS */
+["mouseenter","mouseover","mousedown","pointerdown","touchstart","focus","click"]
+.forEach(evt => {
+  noBtn.addEventListener(evt, e => {
+    e.preventDefault();
+    e.stopPropagation();
+    moveNo();
+    return false;
+  });
 });
-
-/* Mobile */
-document.addEventListener("touchmove", moveNo);
 
 /* YES CLICK */
 yesBtn.addEventListener("click", () => {
@@ -197,7 +205,7 @@ yesBtn.addEventListener("click", () => {
       text-align:center;
       padding:20px;">
       <h1 style="font-size:2.4rem;">
-        Thanks for being a cutie!<br><br>You chose wisely 😌💖<br><br>
+        Thanks for being a cutie! 💖<br><br>
         Morning walk confirmed 🌅🤍
       </h1>
     </div>
