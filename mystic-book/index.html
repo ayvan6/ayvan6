@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mystic Manuscript</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+
+<!-- PASSWORD SCREEN -->
+<div id="password-screen">
+    <div class="lock-box">
+        <h2>Enter the Secret Word</h2>
+        <input type="password" id="password-input">
+        <button id="unlock-btn">Unlock</button>
+        <p id="error-msg"></p>
+    </div>
+</div>
+
+<!-- BOOK AREA -->
+<div id="book-area" class="hidden">
+
+    <!-- CANDLE LIGHT EFFECT -->
+    <div class="candle-glow"></div>
+
+    <!-- COVER -->
+    <div id="cover" class="page cover-page">
+        <h1>The Book of My Heart</h1>
+        <p>Ganpathi bappa morya!!</p>
+    </div>
+
+    <!-- CHAPTER PAGES -->
+    <div class="page">
+        <h2>Chapter I</h2>
+        <p>Your story begins in silence, where memories whisper softly...</p>
+    </div>
+
+    <div class="page">
+        <h2>Chapter II</h2>
+        <p>The ink flows brighter, revealing truths once hidden.</p>
+    </div>
+
+    <div class="page">
+        <h2>Chapter III</h2>
+        <p>Each page carries warmth like candlelight in darkness.</p>
+    </div>
+
+    <div class="page">
+        <h2>Chapter IV</h2>
+        <p>The manuscript grows deeper, richer, more alive.</p>
+    </div>
+
+    <div class="page">
+        <h2>Chapter V</h2>
+        <p>Emotion fills every corner of these sacred pages.</p>
+    </div>
+
+    <div class="page">
+        <h2>Chapter VI</h2>
+        <p>The final chapter is not an ending — but a beginning.</p>
+    </div>
+
+    <!-- CONTROLS -->
+    <div class="controls">
+        <button id="prev-btn">◀</button>
+        <button id="next-btn">▶</button>
+    </div>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
