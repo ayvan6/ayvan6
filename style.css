@@ -1,0 +1,155 @@
+body{
+margin:0;
+background:#1a0f0a;
+font-family:'Merriweather', serif;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+overflow:hidden;
+}
+
+/* PASSWORD */
+#password-screen{
+position:absolute;
+width:100%;
+height:100%;
+display:flex;
+justify-content:center;
+align-items:center;
+background:black;
+}
+
+.lock-box{
+background:#fff8e7;
+padding:40px;
+border-radius:12px;
+text-align:center;
+box-shadow:0 0 25px black;
+}
+
+input,button{
+padding:12px;
+font-size:18px;
+margin-top:10px;
+}
+
+/* BOOK AREA */
+#book-area{
+position:relative;
+width:90vw;
+max-width:700px;
+height:85vh;
+max-height:750px;
+}
+
+.hidden{ display:none; }
+
+/* CANDLE GLOW */
+.candle-glow{
+position:absolute;
+top:50%;
+left:50%;
+width:800px;
+height:800px;
+background:radial-gradient(circle, rgba(255,200,120,0.35) 0%, rgba(0,0,0,0.9) 70%);
+transform:translate(-50%,-50%);
+z-index:0;
+pointer-events:none;
+animation:flicker 2s infinite alternate;
+}
+
+@keyframes flicker{
+0%{opacity:0.9;}
+100%{opacity:1;}
+}
+
+/* PAGE */
+.page{
+position:absolute;
+width:100%;
+height:100%;
+background:url("images/paper-light.png");
+background-size:cover;
+padding:60px;
+box-sizing:border-box;
+box-shadow:0 0 50px black;
+display:none;
+z-index:1;
+border-radius:8px;
+}
+
+/* COVER */
+.cover-page{
+background:url("images/cover.png");
+background-size:cover;
+color:gold;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+text-align:center;
+cursor:pointer;
+}
+
+/* TEXT STYLING */
+h2{
+font-family:'Cinzel', serif;
+font-size:36px;
+color:#3b1d0e;
+margin-bottom:25px;
+}
+
+p{
+font-size:22px;
+color:#2c1a0f;
+line-height:1.8;
+background:rgba(255,255,255,0.6);
+padding:20px;
+border-radius:8px;
+}
+
+/* CONTROLS */
+.controls{
+position:absolute;
+bottom:-60px;
+width:100%;
+display:flex;
+justify-content:space-between;
+}
+
+button{
+background:#5b2c1d;
+color:white;
+border:none;
+padding:12px 25px;
+font-size:18px;
+cursor:pointer;
+border-radius:5px;
+}
+
+/* SLIDE ANIMATION */
+.slide-in{
+animation:slideIn 0.6s ease forwards;
+}
+
+@keyframes slideIn{
+from{
+transform:translateX(100%);
+opacity:0;
+}
+to{
+transform:translateX(0);
+opacity:1;
+}
+}
+
+/* MOBILE */
+@media(max-width:768px){
+.page{
+padding:30px;
+}
+p{
+font-size:18px;
+}
+}

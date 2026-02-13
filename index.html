@@ -1,228 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>One Little Question 💕</title>
+<title>Mystic Manuscript</title>
 
-<style>
-* {
-  box-sizing: border-box;
-  font-family: "Poppins", system-ui, -apple-system;
-}
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
 
-body {
-  margin: 0;
-  height: 100vh;
-  background: linear-gradient(135deg, #ff9a9e, #fad0c4);
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+<link rel="stylesheet" href="style.css">
 
-.container {
-  text-align: center;
-  padding: 20px;
-  max-width: 380px;
-  width: 100%;
-  z-index: 2;
-}
-
-/* MAIN QUESTION – DOMINATING */
-h1 {
-  color: #ffffff;
-  font-size: 2.6rem;
-  font-weight: 800;
-  margin-bottom: 14px;
-  text-shadow: 0 6px 18px rgba(0,0,0,0.25);
-}
-
-/* WARNING TEXT */
-.warning {
-  opacity: 0;
-  margin: 12px 0 22px;
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: #fff;
-  text-shadow: 0 4px 14px rgba(0,0,0,0.35);
-  transition: opacity 0.4s ease;
-}
-
-.warning.show {
-  opacity: 1;
-  animation: shake 0.4s ease;
-}
-
-@keyframes shake {
-  0% { transform: translateX(0); }
-  25% { transform: translateX(-6px); }
-  50% { transform: translateX(6px); }
-  75% { transform: translateX(-6px); }
-  100% { transform: translateX(0); }
-}
-
-.buttons {
-  position: relative;
-  height: 260px;
-}
-
-button {
-  position: absolute;
-  padding: 16px 34px;
-  font-size: 19px;
-  border-radius: 18px;
-  border: none;
-  cursor: pointer;
-  user-select: none;
-}
-
-/* YES */
-#yes {
-  background: #2ecc71;
-  color: white;
-  left: 50%;
-  bottom: 10px;
-  transform: translateX(-50%);
-  animation: pulse 1.5s infinite;
-}
-
-@keyframes pulse {
-  0% { transform: translateX(-50%) scale(1); }
-  50% { transform: translateX(-50%) scale(1.1); }
-  100% { transform: translateX(-50%) scale(1); }
-}
-
-/* NO */
-#no {
-  background: #e74c3c;
-  color: white;
-  top: 20px;
-  left: 20px;
-}
-
-/* Floating hearts */
-.heart {
-  position: absolute;
-  color: rgba(255,255,255,0.7);
-  animation: floatUp 6s linear forwards;
-  pointer-events: none;
-}
-
-@keyframes floatUp {
-  from { transform: translateY(100vh) scale(0.6); opacity: 0; }
-  30% { opacity: 1; }
-  to { transform: translateY(-10vh) scale(1.2); opacity: 0; }
-}
-</style>
 </head>
-
 <body>
 
-<div class="container">
-  <h1>Lets go for morning walk? 💖</h1>
-  <div class="warning" id="warning"></div>
-
-  <div class="buttons" id="arena">
-    <button id="yes">Yes 😍</button>
-    <button id="no" tabindex="-1">No 🙃</button>
-  </div>
+<!-- PASSWORD SCREEN -->
+<div id="password-screen">
+    <div class="lock-box">
+        <h2>Enter the Secret Word</h2>
+        <input type="password" id="password-input">
+        <button id="unlock-btn">Unlock</button>
+        <p id="error-msg"></p>
+    </div>
 </div>
 
-<script>
-const noBtn = document.getElementById("no");
-const yesBtn = document.getElementById("yes");
-const arena = document.getElementById("arena");
-const warning = document.getElementById("warning");
+<!-- BOOK AREA -->
+<div id="book-area" class="hidden">
 
-let attempts = 0;
+    <!-- CANDLE LIGHT EFFECT -->
+    <div class="candle-glow"></div>
 
-const warnings = [
-  "Hey 😅 stop trying",
-  "You’re testing destiny 👀",
-  "This is not possible 🤨",
-  "No is not an option 💀",
-  "Just say YES madamji 💖"
-];
-
-function moveNo() {
-  const arenaRect = arena.getBoundingClientRect();
-  const noRect = noBtn.getBoundingClientRect();
-  const yesRect = yesBtn.getBoundingClientRect();
-
-  const safeDistance = 140;
-  let x, y, distance;
-  let tries = 0;
-
-  do {
-    x = Math.random() * (arenaRect.width - noRect.width);
-    y = Math.random() * (arenaRect.height - noRect.height);
-
-    const noCX = arenaRect.left + x + noRect.width / 2;
-    const noCY = arenaRect.top + y + noRect.height / 2;
-    const yesCX = yesRect.left + yesRect.width / 2;
-    const yesCY = yesRect.top + yesRect.height / 2;
-
-    distance = Math.hypot(noCX - yesCX, noCY - yesCY);
-    tries++;
-  } while (distance < safeDistance && tries < 50);
-
-  noBtn.style.left = x + "px";
-  noBtn.style.top = y + "px";
-
-  attempts++;
-
-  if (attempts >= 3) {
-    warning.classList.add("show");
-    warning.textContent =
-      warnings[Math.min(attempts - 3, warnings.length - 1)];
-  }
-
-  if (navigator.vibrate) navigator.vibrate(40);
-}
-
-/* HARD BLOCK NO — ALL EVENTS */
-["mouseenter","mouseover","mousedown","pointerdown","touchstart","focus","click"]
-.forEach(evt => {
-  noBtn.addEventListener(evt, e => {
-    e.preventDefault();
-    e.stopPropagation();
-    moveNo();
-    return false;
-  });
-});
-
-/* YES CLICK */
-yesBtn.addEventListener("click", () => {
-  document.body.innerHTML = `
-    <div style="
-      height:100vh;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      background:linear-gradient(135deg,#ff758c,#ff7eb3);
-      color:white;
-      text-align:center;
-      padding:20px;">
-      <h1 style="font-size:2.4rem;">
-        Thanks for being a cutie! 💖<br><br>
-        Morning walk confirmed 🌅🤍
-      </h1>
+    <!-- COVER -->
+    <div id="cover" class="page cover-page">
+        <h1>The Book of My Heart</h1>
+        <p>Ganpathi bappa morya!!</p>
     </div>
-  `;
-});
 
-/* Floating hearts */
-setInterval(() => {
-  const heart = document.createElement("div");
-  heart.className = "heart";
-  heart.innerHTML = "❤";
-  heart.style.left = Math.random() * 100 + "vw";
-  heart.style.fontSize = Math.random() * 18 + 16 + "px";
-  document.body.appendChild(heart);
-  setTimeout(() => heart.remove(), 6000);
-}, 350);
-</script>
+    <!-- CHAPTER PAGES -->
+    <div class="page">
+        <h2>Chapter I</h2>
+        <p>Your story begins in silence, where memories whisper softly...</p>
+    </div>
 
+    <div class="page">
+        <h2>Chapter II</h2>
+        <p>The ink flows brighter, revealing truths once hidden.</p>
+    </div>
+
+    <div class="page">
+        <h2>Chapter III</h2>
+        <p>Each page carries warmth like candlelight in darkness.</p>
+    </div>
+
+    <div class="page">
+        <h2>Chapter IV</h2>
+        <p>The manuscript grows deeper, richer, more alive.</p>
+    </div>
+
+    <div class="page">
+        <h2>Chapter V</h2>
+        <p>Emotion fills every corner of these sacred pages.</p>
+    </div>
+
+    <div class="page">
+        <h2>Chapter VI</h2>
+        <p>The final chapter is not an ending — but a beginning.</p>
+    </div>
+
+    <!-- CONTROLS -->
+    <div class="controls">
+        <button id="prev-btn">◀</button>
+        <button id="next-btn">▶</button>
+    </div>
+
+</div>
+
+<script src="script.js"></script>
 </body>
 </html>
